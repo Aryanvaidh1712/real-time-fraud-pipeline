@@ -1,0 +1,25 @@
+# Data Processing
+pandas
+
+# Streaming & State (Kafka + Redis)
+confluent-kafka
+redis
+
+# Machine Learning
+xgboost
+scikit-learn
+
+# Microservice API (FastAPI)
+fastapi
+uvicorn
+pydantic
+requests
+
+# Generative AI (Google Gemini)
+google-genai
+python-dotenv
+
+# Database & Dashboard (PostgreSQL + Streamlit)
+psycopg2-binary
+sqlalchemy
+streamlit
