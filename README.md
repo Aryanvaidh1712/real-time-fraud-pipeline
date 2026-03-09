@@ -11,6 +11,7 @@ An end-to-end, event-driven machine learning microservice designed to process fi
 To bridge the gap between raw machine learning outputs and human fraud investigators, the system integrates **Generative AI** to automatically write natural-language context reports for any flagged transactions.
 
 ## 🏗️ System Architecture & Data Flow
+Data Generator ➔ Kafka Topic ➔ Consumer + Redis Cache ➔ FastAPI + XGBoost ➔ Gemini LLM ➔ PostgreSQL ➔ Streamlit UI
 
 1. **Stream Ingestion (Apache Kafka):** Simulated live credit card transactions are published continuously to a Kafka topic, decoupling the data source from the processing engine.
 2. **Stateful Feature Engineering (Redis):** As transactions arrive, an in-memory Redis cache calculates stateful velocity features (e.g., *time since the last transaction for this specific user*) in milliseconds.
@@ -36,7 +37,48 @@ To bridge the gap between raw machine learning outputs and human fraud investiga
 
 ## ⚙️ Local Installation & Setup
 
-**1. Clone the repository**
+**1. Clone the repository & Install required libraries**
 ```bash
-git clone [https://github.com/yourusername/real-time-fraud-pipeline.git](https://github.com/yourusername/real-time-fraud-pipeline.git)
+git clone https://github.com/Aryanvaidh1712/fraud-detection-api/
 cd real-time-fraud-pipeline
+```
+
+**2. Create a `.env` file in root directory & Add your credentials**
+```bash
+GEMINI_API_KEY="your_google_gemini_api_key"
+POSTGRES_USER="admin"
+POSTGRES_PASSWORD="adminpassword"
+POSTGRES_HOST="localhost"
+POSTGRES_PORT="5432"
+POSTGRES_DB="fraud_db"
+```
+
+**3. Start the Infrastructure (Docker)**
+```bash
+docker-compose up -d
+```
+
+**3. Start the Infrastructure (Docker)**
+You will need to open **4 separate terminal** windows to run the distributed system:
+
+* **Terminal 1: Start the AI Brain (FastAPI)**
+```bash
+uvicorn model_api:app --reload
+```
+
+* **Terminal 2: Start the Kafka Consumer**
+```bash
+python consumer.py
+```
+
+* **Terminal 3: Launch the Live Dashboard (Streamlit)**
+```bash
+streamlit run dashboard.py
+```
+
+* **Terminal 4: Start the Live Transaction Stream (Producer)**
+```bash
+python producer.py
+```
+
+Watch the Streamlit dashboard automatically populate with live fraud alerts and custom AI-generated explanations!
